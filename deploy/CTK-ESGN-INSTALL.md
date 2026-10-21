@@ -47,14 +47,20 @@ sudo mkdir -p /opt/comtek-passprotect
 sudo chown "$USER":"$USER" /opt/comtek-passprotect
 git clone https://github.com/ctkmark/ComtekPassProtect.git /opt/comtek-passprotect
 cd /opt/comtek-passprotect
-git checkout master
-cp deploy/.env.passprotect.example deploy/.env.passprotect
-chmod 600 deploy/.env.passprotect
-openssl rand -hex 64
-openssl rand -hex 32
+# Until the PR is merged, check out the Comtek branded deployment branch.
+git switch --track origin/feature/comtek-branding-and-ctk-esgn-deployment
+# Keep this file private and do not print keys or share them in chat.
+umask 077
+if [ ! -e deploy/.env.passprotect ]; then
+  {
+    printf 'PASS_PROTECT_SECRET_KEY_BASE=%s\n' "$(openssl rand -hex 64)"
+    printf 'PASS_PROTECT_MASTER_KEY=%s\n' "$(openssl rand -hex 32)"
+  } > deploy/.env.passprotect
+  chmod 600 deploy/.env.passprotect
+fi
 ```
 
-**Paste the first generated value into** `PASS_PROTECT_SECRET_KEY_BASE`, **and the second into** `PASS_PROTECT_MASTER_KEY` in `deploy/.env.passprotect`. Never post the values in chat, logs, tickets, or GitHub. Securely back up the file separately from the database. These keys must persist across updates.
+The commands create both encryption keys directly inside the protected `deploy/.env.passprotect` file; they must never be printed into the shell transcript or chat. If you have previously displayed a key, treat it as exposed and generate a **new** key before using PassProtect with real secrets. Securely back up the environment file separately from the database. These keys must persist across updates.
 
 On a host where the latest branded changes are on a PR branch, do not use master until that PR has been reviewed, tested and merged.
 
@@ -64,13 +70,13 @@ Run **only after** inspection confirms loopback port 15100 is free and the chose
 
 ```bash
 cd /opt/comtek-passprotect
-docker compose -f deploy/compose.passprotect.yml --env-file deploy/.env.passprotect config --quiet
-docker compose -f deploy/compose.passprotect.yml --env-file deploy/.env.passprotect up -d --build
-docker compose -f deploy/compose.passprotect.yml --env-file deploy/.env.passprotect ps
-curl -fsS http://127.0.0.1:15100/up >/dev/null && echo 'PassProtect healthy'
+sudo docker compose -p comtek-passprotect -f deploy/compose.passprotect.yml --env-file deploy/.env.passprotect config --quiet
+sudo docker compose -p comtek-passprotect -f deploy/compose.passprotect.yml --env-file deploy/.env.passprotect up -d --build
+sudo docker compose -p comtek-passprotect -f deploy/compose.passprotect.yml --env-file deploy/.env.passprotect ps
+curl -fsS -H 'Host: passprotect.comtek.uk.com' http://127.0.0.1:15100/up >/dev/null && echo 'PassProtect healthy'
 ```
 
-The container listens on internal port **5100**, exposed on host **127.0.0.1:15100**. It must not claim host 80 or 443, which belong to the existing reverse proxy. Persistent SQLite data and uploads live in a named Docker volume mounted on `/opt/PasswordPusher/storage` (not `/opt/PasswordPusher/db` — the latter hides migrations).
+Both the container and host health checks send `Host: passprotect.comtek.uk.com`. A plain `curl http://127.0.0.1:15100/up` returns a **403 Blocked host** by design; do not relax `PWP__ALLOWED_HOSTS` to fix this. The container listens on internal port **5100**, exposed on host **127.0.0.1:15100**. It must not claim host 80 or 443, which belong to the existing reverse proxy. Persistent SQLite data and uploads live in a named Docker volume mounted on `/opt/PasswordPusher/storage` (not `/opt/PasswordPusher/db` — the latter hides migrations).
 
 The image is built **from your fork**. Do not switch to `pglombardo/pwpush:latest` or you'll lose custom branding.
 
@@ -91,7 +97,7 @@ Visit `https://passprotect.comtek.uk.com` after TLS works. A new database redire
 On SSH run:
 ```bash
 cd /opt/comtek-passprotect
-docker compose -f deploy/compose.passprotect.yml --env-file deploy/.env.passprotect logs --tail=120 passprotect
+sudo docker compose -p comtek-passprotect -f deploy/compose.passprotect.yml --env-file deploy/.env.passprotect logs --tail=120 passprotect
 ```
 
 Obtain the one-time **Boot Code** from the logs, and create an administrator using your Comtek email and a strong **email/password** combination. The boot code is only for first-run setup; public self-registration is disabled by deployment configuration. After first-run, test staff sign-in, then configure additional staff accounts using the admin/user-management facilities available in the application. Do not enable public sign-ups merely to add staff.
@@ -117,7 +123,7 @@ If the PassProtect site fails, remove/disable **only** its new reverse-proxy rou
 
 ```bash
 cd /opt/comtek-passprotect
-docker compose -f deploy/compose.passprotect.yml --env-file deploy/.env.passprotect stop passprotect
+sudo docker compose -p comtek-passprotect -f deploy/compose.passprotect.yml --env-file deploy/.env.passprotect stop passprotect
 ```
 
 Do **not** run `docker compose down -v`, `docker system prune`, or remove shared networks. Roll back new proxy changes after checking syntax; leave Documenso untouched.
