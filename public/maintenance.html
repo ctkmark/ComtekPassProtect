@@ -3,8 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
-  <title>Maintenance — Password Pusher</title>
+  <meta name="color-scheme" content="light">
+  <link rel="icon" type="image/svg+xml" href="/comtek-passprotect-icon.svg?v=2">
+  <link rel="shortcut icon" href="/favicon.ico?v=2">
+  <title>Maintenance — Comtek PassProtect</title>
   <style>
     *, *::after, *::before { box-sizing: border-box; }
     html { height: 100%; }
@@ -74,13 +76,30 @@
       .lang-flag:hover { border-color: #4b5563; }
       .lang-flag.active { border-color: #818cf8; }
     }
+      /* Comtek PassProtect white-first appearance, even with a dark OS preference. */
+    html { color-scheme: light; }
+    body { background: #FFFFFF !important; color: #17213A !important;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; }
+    .brand-name { display:flex; justify-content:center; align-items:center; gap:7px;
+      font-size:1.35rem; color:#2B2A29 !important; }
+    .brand-name img { width:46px; height:46px; border-radius:10px; margin-right:3px; }
+    .brand-name .comtek-name { color:#2B2A29 !important; }
+    .brand-name .product-name { color:#4B157B !important; }
+    .brand-tagline, .intro, .help-text { color:#465166 !important; }
+    .heading, .help strong { color:#17213A !important; }
+    .code, .help a { color:#4B157B !important; }
+    .help { background:#F7F7FB !important; border-color:#E5E8EF !important; color:#465166 !important; }
+    .btn-primary { background:#4B157B !important; color:#FFFFFF !important; }
+    .btn-primary:hover { background:#39105D !important; }
+    .btn-secondary { background:#FFFFFF !important; color:#17213A !important; border:1px solid #E5E8EF !important; }
+    .lang-flag.active { border-color:#4B157B !important; }
   </style>
 </head>
 <body>
   <main class="page">
     <div class="brand">
-      <h1 class="brand-name">Password Pusher</h1>
-      <p class="brand-tagline" data-i18n="brand_tagline">Go Ahead. Email Another Password.</p>
+      <h1 class="brand-name"><img src="/comtek-passprotect-icon.svg" width="46" height="46" alt=""><span class="comtek-name">Comtek</span> <span class="product-name">PassProtect</span></h1>
+      <p class="brand-tagline" data-i18n="brand_tagline">Secure password protection for Comtek</p>
     </div>
 
     <nav class="lang-selector" aria-label="Select language">
@@ -102,7 +121,7 @@
 
     <section class="help" aria-label="More information">
       <strong data-i18n="help_title">What's going on?</strong>
-      <p class="help-text" data-i18n-html="help_body">We're performing scheduled maintenance or deploying improvements. This usually only takes a few minutes. Try the button above in a moment, or check <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> for status updates.</p>
+      <p class="help-text" data-i18n="help_body">Please return to the home page and try again. If the issue persists, contact Comtek support.</p>
     </section>
   </main>
   <script>
@@ -130,7 +149,7 @@
       function applyTranslations(locale) {
         var t = T[locale] || T.en;
         document.documentElement.lang = locale;
-        document.title = (locale === 'en' ? 'Maintenance' : t.badge) + ' — Password Pusher';
+        document.title = (locale === 'en' ? 'Maintenance' : t.badge) + ' — Comtek PassProtect';
         document.querySelectorAll('[data-i18n]').forEach(function(el) {
           var key = el.getAttribute('data-i18n');
           if (t[key]) el.textContent = t[key];
@@ -147,58 +166,58 @@
       }
       var T = {
         en: {
-          brand_tagline: 'Go Ahead. Email Another Password.',
+          brand_tagline: 'Secure password protection for Comtek',
           badge: 'Maintenance',
           heading: "We're making things better",
           intro: "We're pushing out updates and will be back shortly. Thanks for your patience.",
           btn_check: 'Check again',
           help_title: "What's going on?",
-          help_body: "We're performing scheduled maintenance or deploying improvements. This usually only takes a few minutes. Try the button above in a moment, or check <a href=\"https://docs.pwpush.com\" target=\"_blank\" rel=\"noopener\">docs.pwpush.com</a> for status updates."
+          help_body: 'Please return to the home page and try again. If the issue persists, contact Comtek support.',
         },
         fr: {
-          brand_tagline: 'Allez-y. Envoyez un autre mot de passe par e-mail.',
+          brand_tagline: 'Secure password protection for Comtek',
           badge: 'Maintenance',
           heading: 'Nous améliorons le service',
           intro: 'Nous déployons des mises à jour et serons de retour sous peu. Merci de votre patience.',
           btn_check: 'Réessayer',
           help_title: "Que se passe-t-il ?",
-          help_body: 'Nous effectuons une maintenance programmée ou déployons des améliorations. Cela ne prend généralement que quelques minutes. Réessayez dans un instant ou consultez <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> pour les mises de statut.'
+          help_body: 'Please return to the home page and try again. If the issue persists, contact Comtek support.',
         },
         de: {
-          brand_tagline: 'Einfach. Noch ein Passwort per E-Mail versenden.',
+          brand_tagline: 'Secure password protection for Comtek',
           badge: 'Wartung',
           heading: 'Wir verbessern gerade etwas',
           intro: 'Wir spielen Updates ein und sind gleich wieder da. Vielen Dank für Ihre Geduld.',
           btn_check: 'Erneut prüfen',
           help_title: 'Was passiert gerade?',
-          help_body: 'Wir führen geplante Wartungsarbeiten durch oder setzen Verbesserungen um. Das dauert in der Regel nur wenige Minuten. Versuchen Sie es in Kürze erneut oder prüfen Sie <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> für Statusmeldungen.'
+          help_body: 'Please return to the home page and try again. If the issue persists, contact Comtek support.',
         },
         nl: {
-          brand_tagline: 'Ga je gang. Stuur nog een wachtwoord per e-mail.',
+          brand_tagline: 'Secure password protection for Comtek',
           badge: 'Onderhoud',
           heading: 'We verbeteren de dienst',
           intro: 'We voeren updates uit en zijn zo terug. Bedankt voor uw geduld.',
           btn_check: 'Opnieuw controleren',
           help_title: 'Wat is er aan de hand?',
-          help_body: 'We voeren gepland onderhoud uit of rollen verbeteringen uit. Dit duurt meestal maar een paar minuten. Probeer de knop hierboven over een ogenblik, of kijk op <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> voor statusupdates.'
+          help_body: 'Please return to the home page and try again. If the issue persists, contact Comtek support.',
         },
         es: {
-          brand_tagline: 'Adelante. Envíe otra contraseña por correo.',
+          brand_tagline: 'Secure password protection for Comtek',
           badge: 'Mantenimiento',
           heading: 'Estamos mejorando',
           intro: 'Estamos desplegando actualizaciones y volveremos en breve. Gracias por su paciencia.',
           btn_check: 'Comprobar de nuevo',
           help_title: '¿Qué está pasando?',
-          help_body: 'Estamos realizando mantenimiento programado o desplegando mejoras. Suele tardar solo unos minutos. Pruebe el botón de arriba en un momento, o consulte <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> para actualizaciones de estado.'
+          help_body: 'Please return to the home page and try again. If the issue persists, contact Comtek support.',
         },
         it: {
-          brand_tagline: 'Avanti. Invia un\'altra password via email.',
+          brand_tagline: 'Secure password protection for Comtek',
           badge: 'Manutenzione',
           heading: 'Stiamo migliorando',
           intro: 'Stiamo distribuendo aggiornamenti e torneremo tra poco. Grazie per la pazienza.',
           btn_check: 'Riprova',
           help_title: 'Cosa sta succedendo?',
-          help_body: 'Stiamo eseguendo manutenzione programmata o distribuendo miglioramenti. Di solito richiede solo pochi minuti. Riprova tra un momento con il pulsante sopra, o controlla <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> per gli aggiornamenti di stato.'
+          help_body: 'Please return to the home page and try again. If the issue persists, contact Comtek support.',
         }
       };
       var locale = getLocale();
