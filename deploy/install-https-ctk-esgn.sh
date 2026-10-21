@@ -12,10 +12,16 @@ STAMP="$(date +%Y%m%d_%H%M%S)"
 BACKUP="/var/backups/comtek-hosted-apps/nginx_before_passprotect_$STAMP"
 CREATED=0
 COMPLETE=0
+MARKER_PATH=""
+PROBE_HEADERS=""
+PROBE_BODY=""
 
 cleanup() {
     rc=$?
     set +e
+    if [ -n "$MARKER_PATH" ]; then sudo rm -f "$MARKER_PATH"; fi
+    if [ -n "$PROBE_HEADERS" ]; then rm -f "$PROBE_HEADERS"; fi
+    if [ -n "$PROBE_BODY" ]; then rm -f "$PROBE_BODY"; fi
     if [ "$CREATED" -eq 1 ] && [ "$COMPLETE" -ne 1 ]; then
         echo "WARNING: PassProtect HTTPS setup incomplete (exit $rc)."
         echo "Reverting ONLY the new PassProtect Nginx site."
@@ -86,14 +92,48 @@ sudo nginx -t
 sudo systemctl reload nginx
 
 echo "=== TESTING ACME WEBROOT ROUTE ==="
-MARKER="comtek-acme-check-$(date +%s)-$$"
-printf '%s' "$MARKER" | sudo tee "$WEBROOT/.well-known/acme-challenge/$MARKER" >/dev/null
-RESULT="$(curl --noproxy '*' -fsS --max-time 10 --resolve "$DOMAIN:80:127.0.0.1" "http://$DOMAIN/.well-known/acme-challenge/$MARKER")"
-sudo rm -f "$WEBROOT/.well-known/acme-challenge/$MARKER"
-if [ "$RESULT" != "$MARKER" ]; then
-    echo "ERROR: ACME webroot test returned unexpected content."
+MARKER="comtek-acme-check-$(date +%s)-$"
+MARKER_PATH="$WEBROOT/.well-known/acme-challenge/$MARKER"
+printf '%s' "$MARKER" | sudo tee "$MARKER_PATH" >/dev/null
+PROBE_HEADERS="$(mktemp)"
+PROBE_BODY="$(mktemp)"
+CHALLENGE_URL="http://$DOMAIN/.well-known/acme-challenge/$MARKER"
+PROBE_OK=0
+PROBE_STATUS="not-started"
+
+# systemctl reload returns before all Nginx workers necessarily serve the new
+# virtual host. On the first request the old default vhost can still return 301.
+# Retry a strict HTTP 200 + exact-body check; never accept redirects here.
+for attempt in $(seq 1 20); do
+    if PROBE_STATUS="$(curl --noproxy '*' --silent --show-error --max-time 5 \
+        --resolve "$DOMAIN:80:127.0.0.1" \
+        -D "$PROBE_HEADERS" -o "$PROBE_BODY" -w '%{http_code}' \
+        "$CHALLENGE_URL" 2>/dev/null)"; then
+        if [ "$PROBE_STATUS" = "200" ] && [ "$(cat "$PROBE_BODY")" = "$MARKER" ]; then
+            PROBE_OK=1
+            break
+        fi
+    else
+        PROBE_STATUS="connection-error"
+    fi
+    sleep 1
+done
+
+if [ "$PROBE_OK" -ne 1 ]; then
+    echo "ERROR: ACME challenge did not serve the expected marker after 20 retries."
+    echo "Last HTTP status: $PROBE_STATUS"
+    echo "Last HTTP response status / redirect (safe to share):"
+    grep -iE '^(HTTP/|location:|server:)' "$PROBE_HEADERS" | tr -d '\r' || true
+    echo "Possible causes: Nginx configuration not yet activated, wrong HTTP server block,"
+    echo "or a conflicting port 80 hostname route. Certbot has NOT been run."
     exit 1
 fi
+sudo rm -f "$MARKER_PATH"
+MARKER_PATH=""
+rm -f "$PROBE_HEADERS" "$PROBE_BODY"
+PROBE_HEADERS=""
+PROBE_BODY=""
+echo "PASS: ACME test marker served correctly over HTTP."
 
 echo "=== OBTAINING A SEPARATE LET'S ENCRYPT CERTIFICATE ==="
 sudo certbot certonly --webroot --webroot-path "$WEBROOT" \
@@ -153,8 +193,20 @@ sudo nginx -t
 sudo systemctl reload nginx
 
 echo "=== VERIFYING BOTH HOSTNAMES ==="
-curl --noproxy '*' -fsS --max-time 15 \
-    --resolve "$DOMAIN:443:127.0.0.1" "https://$DOMAIN/up" >/dev/null
+HTTPS_OK=0
+for attempt in $(seq 1 20); do
+    if curl --noproxy '*' --silent --show-error --fail --max-time 5 \
+        --resolve "$DOMAIN:443:127.0.0.1" "https://$DOMAIN/up" >/dev/null 2>&1; then
+        HTTPS_OK=1
+        break
+    fi
+    sleep 1
+done
+if [ "$HTTPS_OK" -ne 1 ]; then
+    echo "ERROR: HTTPS verification failed after Nginx reload."
+    echo "Check Nginx errors, DNS, and the PassProtect certificate (do not use curl -k)."
+    exit 1
+fi
 echo "PASS: Comtek PassProtect HTTPS /up"
 ESIGN_STATUS="$(curl --noproxy '*' -sS -o /dev/null -w '%{http_code}' \
     --max-time 15 --resolve 'esign.comtek.uk.com:443:127.0.0.1' \
