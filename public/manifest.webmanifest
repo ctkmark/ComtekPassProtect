@@ -1,0 +1,16 @@
+{
+  "name": "Comtek PassProtect",
+  "short_name": "PassProtect",
+  "description": "Secure password protection for Comtek",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#4B157B",
+  "icons": [
+    {
+      "src": "/comtek-passprotect-icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}

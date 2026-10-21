@@ -1,14 +1,149 @@
 /*
- * This file is intentionally left blank.
- *
- * Use file file to place CSS overrides in.  It is loaded last and will take precedence.
+ * Comtek PassProtect — Comtek product branding guide is the source of truth.
+ * White-first identity. No external fonts or trackers.
  */
-
-/*
- Example:
-
-.container {
-    color: #000;
-    background-color: #1acaca;
+:root,
+html[data-bs-theme="light"] {
+  --background: #FFFFFF;
+  --foreground: #17213A;
+  --primary: #4B157B;
+  --primary-foreground: #FFFFFF;
+  --muted: #F7F7FB;
+  --muted-foreground: #465166;
+  --accent: #F5F1FA;
+  --accent-foreground: #17213A;
+  --border: #E5E8EF;
+  --input: #E5E8EF;
+  --comtek-charcoal: #2B2A29;
+  --comtek-purple: #4B157B;
+  --comtek-lilac: #6F61B5;
+  --bs-primary: #4B157B;
+  --bs-primary-rgb: 75, 21, 123;
+  --bs-body-color: #17213A;
+  --bs-body-bg: #FFFFFF;
+  --bs-secondary-color: #465166;
+  --bs-border-color: #E5E8EF;
+  --bs-link-color: #4B157B;
+  --bs-link-color-rgb: 75, 21, 123;
+  --bs-link-hover-color: #39105D;
+  --bs-link-hover-color-rgb: 57, 16, 93;
 }
-*/
+body {
+  background: #FFFFFF;
+  color: #17213A;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  font-size: 15px;
+}
+.text-muted, .text-body-secondary, .comtek-supporting-text {
+  color: #465166 !important;
+}
+a { color: #4B157B; }
+a:hover { color: #39105D; }
+h1, h2, h3, h4, h5, h6 { color: #17213A; }
+h1 { font-size: clamp(28px, 2.6vw, 32px); font-weight: 600; }
+h2 { font-size: 20px; font-weight: 600; }
+.card, .modal-content, .list-group-item, .form-control, .form-select, .input-group-text {
+  background: #FFFFFF;
+  border-color: #E5E8EF;
+  color: #17213A;
+}
+.bg-light, .bg-body-tertiary { background: #F7F7FB !important; }
+.btn { font-size: 15px; font-weight: 600; }
+.btn-primary {
+  --bs-btn-bg: #4B157B;
+  --bs-btn-border-color: #4B157B;
+  --bs-btn-color: #FFFFFF;
+  --bs-btn-hover-bg: #39105D;
+  --bs-btn-hover-border-color: #39105D;
+  --bs-btn-hover-color: #FFFFFF;
+  --bs-btn-active-bg: #39105D;
+  --bs-btn-active-border-color: #39105D;
+  --bs-btn-disabled-bg: #6F61B5;
+  --bs-btn-disabled-border-color: #6F61B5;
+}
+.btn-outline-primary {
+  --bs-btn-color: #4B157B;
+  --bs-btn-border-color: #4B157B;
+  --bs-btn-hover-bg: #4B157B;
+  --bs-btn-hover-border-color: #4B157B;
+  --bs-btn-hover-color: #FFFFFF;
+  --bs-btn-active-bg: #39105D;
+  --bs-btn-active-border-color: #39105D;
+}
+.btn-outline-secondary {
+  --bs-btn-color: #17213A;
+  --bs-btn-border-color: #E5E8EF;
+  --bs-btn-bg: #FFFFFF;
+  --bs-btn-hover-bg: #F5F1FA;
+  --bs-btn-hover-border-color: #6F61B5;
+  --bs-btn-hover-color: #17213A;
+}
+.form-control:focus, .form-select:focus {
+  border-color: #6F61B5;
+  box-shadow: 0 0 0 .2rem rgba(75,21,123,.13);
+}
+.form-check-input:checked {
+  background-color: #4B157B;
+  border-color: #4B157B;
+}
+.form-range::-webkit-slider-thumb { background: #4B157B; }
+.form-range::-moz-range-thumb { background: #4B157B; }
+.nav-link { color: #465166; }
+.nav-link:hover, .nav-underline .nav-link.active { color: #4B157B; }
+.dropdown-item:active { background: #4B157B; }
+:focus-visible { outline: 2px solid #6F61B5; outline-offset: 2px; }
+
+/* Shared Comtek product lockup: purple shield; two-tone name. */
+.comtek-product-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.comtek-product-icon { display: block; width: auto; max-height: 54px; border-radius: 12px; flex: 0 0 auto; }
+.comtek-product-name {
+  font-size: 23px;
+  line-height: 1.15;
+  font-weight: 650;
+  letter-spacing: -.035em;
+}
+.comtek-product-company { color: #2B2A29; }
+.comtek-product-service { color: #4B157B; }
+.comtek-site-header header { border-color: #E5E8EF !important; }
+.comtek-site-header .comtek-product-name { font-size: 22px; }
+.footer .comtek-product-name { font-size: 17px; }
+.footer .comtek-product-icon { border-radius: 8px; }
+
+/* White-first email/password sign-in. No inactive SSO or passkey buttons. */
+.comtek-auth-page { background: #FFFFFF; }
+.comtek-auth-shell { width: 100%; max-width: 475px; padding: 28px 16px; }
+.comtek-auth-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E8EF;
+  border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(23,33,58,.065);
+  padding: clamp(24px, 4vw, 40px);
+}
+.comtek-auth-brand { display: flex; justify-content: center; margin-bottom: 28px; }
+.comtek-auth-brand a { text-decoration: none; }
+.comtek-auth-brand .comtek-product-icon { height: 46px; width: 46px; }
+.comtek-auth-brand .comtek-product-name { font-size: 25px; }
+.comtek-auth-heading { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+.comtek-auth-subtitle { font-size: 14px; color: #465166; margin-bottom: 28px; }
+.comtek-auth-links .list-group-item { border-color: #E5E8EF; background: #FFFFFF; }
+.comtek-auth-links .nav-link { color: #4B157B !important; }
+.comtek-auth-links .list-group { border-radius: 10px; overflow: hidden; }
+
+/* Delivery must remain accessible to anonymous recipients. */
+.comtek-recipient-brand { display: flex; align-items: center; justify-content: center; padding: 20px 12px 4px; }
+.comtek-recipient-brand .comtek-product-name { font-size: 18px; }
+.comtek-recipient-brand .comtek-product-icon { height: 32px; width: 32px; }
+.comtek-setup-card { max-width: 650px; margin: 28px auto; padding: 28px; border: 1px solid #E5E8EF; border-radius: 16px; background: #FFFFFF; }
+.comtek-setup-note { padding: 14px 18px; background: #F5F1FA; color: #465166; border: 1px solid #E5E8EF; border-radius: 12px; }
+@media (max-width: 440px) {
+  .comtek-product-name { font-size: 20px; }
+  .comtek-auth-brand .comtek-product-name { font-size: 20px; }
+  .comtek-auth-brand .comtek-product-icon { height: 40px; width: 40px; }
+}

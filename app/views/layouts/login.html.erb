@@ -10,49 +10,36 @@
 <head>
   <%= render partial: "shared/theme_boot" %>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
   <title><%= content_for?(:html_title) ? yield(:html_title) : Settings.brand.title %></title>
-
-  <meta content='width=device-width, initial-scale=1' name='viewport'>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <%= render partial: "shared/robots_meta" %>
-
   <%= render partial: "shared/layout_icons", cached: true %>
-
   <%= render partial: "application/ga", cached: true %>
   <%= render partial: "application/plausible" %>
-
   <%= csrf_meta_tags %>
   <%= csp_meta_tag if defined?(csp_meta_tag) %>
-
   <%= stylesheet_link_tag PasswordPusher::Theme.stylesheet_logical_name, "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
-  <%= tag.meta name: 'turbo-drive-enabled', content: ENV.key?('TURBO_DRIVE_ENABLED') ? ENV['TURBO_DRIVE_ENABLED'].to_s.downcase : true %>
-  <%# GET-only: full page load so password managers can detect auth forms after Turbo navigation.
-      Omit on POST/PUT/PATCH (including 422s) so Turbo can keep rendered validation errors. %>
+  <%= tag.meta name: "turbo-drive-enabled", content: ENV.key?("TURBO_DRIVE_ENABLED") ? ENV["TURBO_DRIVE_ENABLED"].to_s.downcase : true %>
   <% if request.get? %>
     <meta name="turbo-visit-control" content="reload">
   <% end %>
 </head>
-
-<body class="d-flex flex-column min-vh-100">
-  <div class="position-absolute top-0 end-0 p-3">
-    <%= render partial: "shared/theme_toggle" %>
-  </div>
+<body class="comtek-auth-page d-flex flex-column min-vh-100">
   <div class="container-fluid d-flex flex-column min-vh-100 justify-content-center align-items-center">
-    <%= render partial: 'shared/alerts' %>
-    <main class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 text-center">
-      <%= link_to root_path(locale: locale.to_s), hreflang: locale.to_s do %>
-        <%= render partial: "shared/brand_logo", locals: { height: nil, css_class: "", style: "max-height: 120px; max-width: 100%; height: auto;" } %>
-      <% end %>
-
-      <%= yield %>
-
-      <hr class="mt-5">
-      <div class='my-3'>
-        <%= render "devise/shared/links" %>
+    <main class="comtek-auth-shell">
+      <%= render partial: "shared/alerts" %>
+      <div class="comtek-auth-card">
+        <div class="comtek-auth-brand">
+          <%= link_to root_path(locale: locale.to_s), hreflang: locale.to_s, "aria-label": "Comtek PassProtect home" do %>
+            <%= render partial: "shared/brand_logo", locals: {height: 46} %>
+          <% end %>
+        </div>
+        <%= yield %>
+        <div class="comtek-auth-links mt-4">
+          <%= render "devise/shared/links" %>
+        </div>
       </div>
-      <hr class="mt-5">
     </main>
   </div>
 </body>

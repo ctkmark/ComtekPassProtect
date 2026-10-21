@@ -2,28 +2,21 @@
   <div class="container">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
       <div class="d-flex align-items-center gap-2">
-        <%= link_to root_path(locale: locale.to_s), class: "text-decoration-none" do %>
-          <%= render partial: "shared/brand_logo", locals: { height: 28 } %>
+        <%= link_to root_path(locale: locale.to_s), class: "text-decoration-none", "aria-label": "Comtek PassProtect home" do %>
+          <%= render partial: "shared/brand_logo", locals: {height: 28} %>
         <% end %>
-        <span class="text-muted small">
-          &copy; <%= Time.now.year %>
-          <%= link_to "Apnotic", "https://apnotic.com", target: "_blank", rel: "noopener noreferrer", class: "text-muted text-decoration-none" %>
-          <% if Settings.show_version %>&middot; v<%= Version.current %><% end %>
+        <span class="small comtek-supporting-text">
+          &copy; <%= Time.current.year %> Comtek System Solutions
         </span>
       </div>
-
-      <% if Settings.brand.show_footer_menu %>
-        <nav class="d-flex flex-wrap gap-3 small">
-          <%= link_to _('About').capitalize, page_path('about'), class: 'text-muted text-decoration-none' %>
-          <%= link_to _('API'), help_api_path, class: 'text-muted text-decoration-none' %>
-          <%= link_to _('Documentation').capitalize, "https://docs.pwpush.com", target: "_blank", rel: "noopener noreferrer", class: 'text-muted text-decoration-none' %>
-          <%= link_to 'GitHub', "https://github.com/pglombardo/PasswordPusher", target: "_blank", rel: "noopener noreferrer", class: 'text-muted text-decoration-none' %>
-        </nav>
-      <% end %>
+      <span class="small comtek-supporting-text">
+        Built using
+        <%= link_to "Password Pusher", "https://github.com/pglombardo/PasswordPusher", target: "_blank", rel: "noopener noreferrer", class: "text-decoration-none" %>,
+        Apache 2.0 licensed software by Apnotic.
+      </span>
     </div>
-
-    <% if Settings.brand.disclaimer %>
-      <p class="text-muted small fst-italic text-center mt-3 mb-0"><%= Settings.brand.disclaimer %></p>
+    <% if Settings.brand.disclaimer.present? %>
+      <p class="small comtek-supporting-text text-center mt-3 mb-0"><%= Settings.brand.disclaimer %></p>
     <% end %>
   </div>
 </footer>

@@ -1,66 +1,59 @@
-<div class="container">
-  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-    <%= link_to root_path, class: 'd-flex align-items-center mb-3 mb-md-0 me-md-auto text-body-emphasis text-decoration-none', hreflang: locale.to_s do %>
-      <div class="me-3">
-        <%= render partial: "shared/brand_logo", locals: { height: 50 } %>
-      </div>
-      <div class="d-none d-sm-block">
-        <span class="fs-4 fw-semibold d-block lh-sm"><%= Settings.brand.title %></span>
-        <span class="small text-muted"><%= Settings.brand.tagline %></span>
-      </div>
+<div class="container comtek-site-header">
+  <header class="d-flex flex-wrap align-items-center justify-content-between gap-3 py-3 mb-4 border-bottom">
+    <%= link_to root_path, class: "d-flex align-items-center text-decoration-none", hreflang: locale.to_s, "aria-label": "Comtek PassProtect home" do %>
+      <%= render partial: "shared/brand_logo", locals: {height: 42} %>
     <% end %>
 
-    <nav class="d-flex align-items-center gap-2">
+    <nav class="d-flex align-items-center gap-2" aria-label="Application navigation">
       <%= render partial: "shared/theme_toggle" %>
-
       <% if current_user %>
         <%= link_to pushes_path, class: "btn btn-primary d-flex align-items-center gap-2" do %>
-          <em class="bi bi-grid-3x3-gap-fill"></em>
-          <span class="d-none d-sm-inline"><%= _('Dashboard') %></span>
+          <em class="bi bi-grid-3x3-gap-fill" aria-hidden="true"></em>
+          <span class="d-none d-sm-inline"><%= _("Dashboard") %></span>
         <% end %>
 
         <div class="dropdown">
           <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2" type="button" id="accountDropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-            <em class="bi bi-person-circle"></em>
-            <span class="d-none d-md-inline"><%= _('Account') %></span>
+            <em class="bi bi-person-circle" aria-hidden="true"></em>
+            <span class="d-none d-md-inline"><%= _("Account") %></span>
           </button>
           <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="accountDropdownMenuLink">
             <% if current_user.admin? %>
               <li>
                 <%= link_to admin_root_path, class: "dropdown-item d-flex align-items-center gap-2 py-2" do %>
-                  <em class="bi bi-shield-check text-primary"></em>
-                  <%= _('Administration Center') %>
+                  <em class="bi bi-shield-check text-primary" aria-hidden="true"></em>
+                  <%= _("Administration Center") %>
                 <% end %>
               </li>
               <li><hr class="dropdown-divider"></li>
             <% end %>
             <li>
               <%= link_to edit_user_registration_path, class: "dropdown-item d-flex align-items-center gap-2 py-2" do %>
-                <em class="bi bi-pencil-square text-secondary"></em>
-                <%= _('Edit Login Details') %>
+                <em class="bi bi-pencil-square" aria-hidden="true"></em>
+                <%= _("Edit Login Details") %>
               <% end %>
             </li>
             <li>
               <%= link_to token_user_registration_path, class: "dropdown-item d-flex align-items-center gap-2 py-2" do %>
-                <em class="bi bi-key text-secondary"></em>
-                <%= _('API Token') %>
+                <em class="bi bi-key" aria-hidden="true"></em>
+                <%= _("API Token") %>
               <% end %>
             </li>
             <li><hr class="dropdown-divider"></li>
             <li>
               <%= button_to destroy_user_session_path, method: :delete, class: "dropdown-item d-flex align-items-center gap-2 py-2 text-danger", form_class: "d-block" do %>
-                <em class="bi bi-box-arrow-right"></em>
-                <%= _('Log Out') %>
+                <em class="bi bi-box-arrow-right" aria-hidden="true"></em>
+                <%= _("Log Out") %>
               <% end %>
             </li>
           </ul>
         </div>
       <% else %>
         <% unless Settings.disable_logins %>
-          <%= link_to _('Log In'), new_user_session_path, class: "btn btn-outline-secondary", data: { turbo: false } %>
+          <%= link_to "Sign in", new_user_session_path, class: "btn btn-outline-secondary", data: {turbo: false} %>
         <% end %>
         <% unless Settings.disable_signups %>
-          <%= link_to _('Sign Up'), new_user_registration_path, class: "btn btn-primary", data: { turbo: false } %>
+          <%= link_to _("Sign Up"), new_user_registration_path, class: "btn btn-primary", data: {turbo: false} %>
         <% end %>
       <% end %>
     </nav>
