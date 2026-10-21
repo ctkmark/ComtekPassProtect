@@ -4,7 +4,8 @@
       <% if Settings.theme_mode_locked? %> data-bs-theme="<%= Settings.theme_mode %>" data-theme="<%= Settings.theme_mode %>"<% end %>>
 <head>
   <%= render partial: "shared/theme_boot" %>
-  <title>Mission control - <%= page_title %></title>
+  <title>Comtek PassProtect - <%= page_title %></title>
+  <%= render partial: "shared/layout_icons" %>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
