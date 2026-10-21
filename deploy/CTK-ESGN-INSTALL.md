@@ -135,3 +135,39 @@ On upgrades, back up storage and keys, pin and record the Git commit and image v
 This deployment is based on the Apache 2.0-licensed Password Pusher project. Preserve its licence and attribution notices. Branding in the UI is Comtek PassProtect, but the upstream author must remain properly credited. Recipient links are bearer secrets: anyone possessing a live URL can redeem it, subject to expiry and optional passphrase.
 
 This runbook does not assert any production change was made or any functionality was tested on the live host.
+
+---
+
+## Verified ctk-esgn HTTPS setup (after healthy local container)
+
+This host has Nginx installed directly, an existing `esign.comtek.uk.com` virtual host, and a separate PassProtect container listening on `127.0.0.1:15100`. The tested **local** Docker health check returns healthy. HTTPS must use a separate site and certificate; do not edit the existing eSign vhost.
+
+The repository includes a **guarded, server-specific** installer, `deploy/install-https-ctk-esgn.sh`. It:
+- checks DNS and the local PassProtect health endpoint;
+- creates a root-only, timestamped archive of the existing Nginx configuration;
+- creates a temporary HTTP-01 challenge route, preserving the eSign site;
+- obtains a separate Let's Encrypt certificate using Certbot's webroot authenticator;
+- installs HTTPS reverse proxying to `127.0.0.1:15100`, with access logging disabled for bearer secret URLs and a no-referrer response policy;
+- validates both new PassProtect HTTPS and existing eSign HTTPS;
+- adds a dedicated certificate-renewal Nginx reload hook;
+- removes **only the newly created** Nginx site and reloads the original configuration on error.
+
+Run from the host's SSH session (do not run with `sudo bash`; the script uses `sudo` only for privileged operations):
+
+```bash
+cd /opt/comtek-passprotect
+git pull --ff-only
+bash -n deploy/install-https-ctk-esgn.sh
+bash deploy/install-https-ctk-esgn.sh
+```
+
+**The installer intentionally stops if the PassProtect Nginx site already exists.** Inspect it rather than overwriting any existing configuration. Keep the printed backup location. The script cannot guarantee that upstream networking permits ACME validation, so a certificate challenge may fail and cause the new Nginx site to be rolled back automatically; it does not stop Documenso.
+
+Once successful, verify the external URL in a browser and test certificate renewal (a dry-run does not replace the live certificate):
+
+```bash
+sudo certbot certificates
+sudo certbot renew --dry-run --cert-name passprotect.comtek.uk.com
+```
+
+Create the initial administrator via the first-run page, taking the **boot code from server logs only**. Never paste boot codes, app secrets, or real password-share URLs into chat or tickets.
