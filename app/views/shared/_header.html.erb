@@ -41,7 +41,7 @@
             </li>
             <li><hr class="dropdown-divider"></li>
             <li>
-              <%= button_to destroy_user_session_path, method: :delete, class: "dropdown-item d-flex align-items-center gap-2 py-2 text-danger", form_class: "d-block" do %>
+              <%= button_to destroy_user_session_path, method: :delete, class: "dropdown-item d-flex align-items-center gap-2 py-2 text-danger", form_class: "d-block", form: {data: {turbo: false}} do %>
                 <em class="bi bi-box-arrow-right" aria-hidden="true"></em>
                 <%= _("Log Out") %>
               <% end %>
