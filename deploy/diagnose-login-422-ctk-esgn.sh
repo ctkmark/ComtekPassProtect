@@ -20,6 +20,7 @@ echo "=== HTTPS SIGN-IN PAGE (NO CREDENTIALS SUBMITTED) ==="
 LOGIN_URL="https://$DOMAIN/users/sign_in"
 if ! STATUS="$(curl --silent --show-error --location --max-redirs 3 --max-time 20 \
   --noproxy '*' --resolve "$DOMAIN:443:127.0.0.1" \
+  --header 'Accept: text/html' \
   --cookie-jar "$TMP/cookies" --cookie "$TMP/cookies" \
   --dump-header "$TMP/headers" --output "$TMP/login.html" \
   --write-out '%{http_code}' "$LOGIN_URL")"; then
@@ -27,6 +28,14 @@ if ! STATUS="$(curl --silent --show-error --location --max-redirs 3 --max-time 2
   exit 1
 fi
 echo "Login GET HTTP status: $STATUS"
+if [ "$STATUS" != "200" ]; then
+  echo "NOTE: Not a successful HTML login form. Form/cookie checks may be misleading."
+fi
+if grep -qi 'content-type:.*text/html' "$TMP/headers"; then
+  echo "HTML content-type: confirmed"
+else
+  echo "HTML content-type: not confirmed"
+fi
 if grep -Eq 'name="authenticity_token"|name=.authenticity_token.' "$TMP/login.html"; then
   echo "Hidden CSRF form field: present"
 else
@@ -40,12 +49,12 @@ fi
 if grep -q '_PasswordPusher_session' "$TMP/cookies" 2>/dev/null; then
   echo "Session cookie accepted by curl: yes"
 else
-  echo "Session cookie accepted by curl: no"
+  echo "Session cookie accepted by curl: no (can be normal until a session is written)"
 fi
 if grep -qi '^set-cookie:.*_PasswordPusher_session=' "$TMP/headers"; then
   echo "Session Set-Cookie header: present"
 else
-  echo "Session Set-Cookie header: missing"
+  echo "Session Set-Cookie header: missing (not necessarily an error on GET)"
 fi
 if grep -qi '^set-cookie:.*_PasswordPusher_session=.*secure' "$TMP/headers"; then
   echo "Session cookie Secure flag: present"
@@ -57,23 +66,29 @@ if grep -qi '^set-cookie:.*_PasswordPusher_session=.*samesite=strict' "$TMP/head
 fi
 echo
 
-echo "=== RECENT SERVER ERROR COUNTS (NO RAW REQUEST LOGS) ==="
+echo "=== RECENT SERVER ERROR COUNTS - LAST 36 HOURS (NO RAW REQUEST LOGS) ==="
 # Only counts are printed, never email addresses, request URIs, cookies, tokens
 # or secret-link payloads. Messages usually name the exception class.
-sudo docker logs --since 90m comtek-passprotect 2>&1 | awk '
-  /ActionController::InvalidAuthenticityToken/ {invalid_csrf++}
+sudo docker logs --since 36h comtek-passprotect 2>&1 | awk '
+  /ActionController::InvalidAuthenticityToken|ActionController::InvalidCrossOriginRequest/ {invalid_csrf++}
   /Can.t verify CSRF token authenticity|Invalid CSRF token|CSRF token authenticity/ {csrf_log++}
   /Origin header.*(did not match|does not match|mismatch)/ {origin++}
   /InvalidCrossOriginRequest/ {cross_origin++}
   /CookieOverflow|InvalidMessage|MessageVerifier/ {cookie++}
-  /Completed 422|422 Unprocessable|status=422/ {http422++}
+  /Completed 422|422 Unprocessable|status=422|Processing by.*Users::SessionsController/ {http422++}
+  /ActionController::UnknownFormat/ {format++}
+  /ActiveRecord::RecordInvalid/ {record++}
+  /ActionDispatch::Cookies::CookieOverflow/ {overflow++}
   END {
     printf "InvalidAuthenticityToken occurrences: %d\n", invalid_csrf+0
     printf "CSRF verification messages: %d\n", csrf_log+0
     printf "Origin-mismatch messages: %d\n", origin+0
     printf "InvalidCrossOriginRequest occurrences: %d\n", cross_origin+0
     printf "Cookie / message verification error occurrences: %d\n", cookie+0
-    printf "HTTP 422 completion messages: %d\n", http422+0
+    printf "Login/controller + HTTP 422 traces: %d\n", http422+0
+    printf "UnknownFormat occurrences: %d\n", format+0
+    printf "RecordInvalid occurrences: %d\n", record+0
+    printf "CookieOverflow occurrences: %d\n", overflow+0
   }
 '
 echo
