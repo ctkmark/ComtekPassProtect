@@ -9,7 +9,7 @@
           <em class="bi bi-key me-2"></em><%= _('Encryption Key Generator') %>
         </h1>
         <p class="lead text-body-emphasis">
-          <%= _('Generate a secure encryption key for your self-hosted Password Pusher instance.') %>
+          <%= _('Generate a secure encryption key for your self-hosted Comtek PassProtect instance.') %>
         </p>
       </header>
 
@@ -20,7 +20,7 @@
           <em class="bi bi-info-circle me-2 text-primary"></em><%= _('Why Use a Custom Key?') %>
         </h2>
         <p>
-          <%= _('Password Pusher encrypts all sensitive data in the database using a master encryption key. While a default key is provided for convenience, using your own unique key provides the highest level of security for your private instance.') %>
+          <%= _('Comtek PassProtect encrypts all sensitive data in the database using a master encryption key. Your Comtek deployment already uses a dedicated master key. Keep it securely backed up and do not replace it casually.') %>
         </p>
       </section>
 
@@ -72,7 +72,7 @@
                   <em class="bi bi-check-circle text-success me-1"></em><%= _('Default Key Available') %>
                 </h6>
                 <p class="card-text small mb-0">
-                  <%= _('A default key is used if none is provided. This works but is less secure than a custom key.') %>
+                  <%= _('Production deployments must use a persistent unique master key. Comtek PassProtect already has one configured.') %>
                 </p>
               </div>
             </div>
@@ -127,7 +127,7 @@
           <%= _('You can also generate keys from the command line in the application source:') %>
         </p>
         <div class="bg-dark text-light p-3 rounded-3 font-monospace small">
-          <div class="text-muted"># <%= _('In your Password Pusher directory') %></div>
+          <div class="text-muted"># <%= _('In your Comtek PassProtect directory') %></div>
           <div>$ bundle install</div>
           <div>$ rails console</div>
           <div class="mt-2 text-success">> Lockbox.generate_key</div>

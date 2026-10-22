@@ -3,8 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
-  <title>Change rejected — Password Pusher</title>
+  <meta name="color-scheme" content="light">
+  <link rel="icon" type="image/svg+xml" href="/comtek-passprotect-icon.svg?v=2">
+  <link rel="shortcut icon" href="/favicon.ico?v=2">
+  <title>Change rejected — Comtek PassProtect</title>
   <style>
     *, *::after, *::before { box-sizing: border-box; }
     html { height: 100%; }
@@ -80,13 +82,30 @@
       .lang-flag:hover { border-color: #4b5563; }
       .lang-flag.active { border-color: #818cf8; }
     }
+      /* Comtek PassProtect white-first appearance, even with a dark OS preference. */
+    html { color-scheme: light; }
+    body { background: #FFFFFF !important; color: #17213A !important;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; }
+    .brand-name { display:flex; justify-content:center; align-items:center; gap:7px;
+      font-size:1.35rem; color:#2B2A29 !important; }
+    .brand-name img { width:46px; height:46px; border-radius:10px; margin-right:3px; }
+    .brand-name .comtek-name { color:#2B2A29 !important; }
+    .brand-name .product-name { color:#4B157B !important; }
+    .brand-tagline, .intro, .help-text { color:#465166 !important; }
+    .heading, .help strong { color:#17213A !important; }
+    .code, .help a { color:#4B157B !important; }
+    .help { background:#F7F7FB !important; border-color:#E5E8EF !important; color:#465166 !important; }
+    .btn-primary { background:#4B157B !important; color:#FFFFFF !important; }
+    .btn-primary:hover { background:#39105D !important; }
+    .btn-secondary { background:#FFFFFF !important; color:#17213A !important; border:1px solid #E5E8EF !important; }
+    .lang-flag.active { border-color:#4B157B !important; }
   </style>
 </head>
 <body>
   <main class="page">
     <div class="brand">
-      <h1 class="brand-name">Password Pusher</h1>
-      <p class="brand-tagline" data-i18n="brand_tagline">Go Ahead. Email Another Password.</p>
+      <h1 class="brand-name"><img src="/comtek-passprotect-icon.svg" width="46" height="46" alt=""><span class="comtek-name">Comtek</span> <span class="product-name">PassProtect</span></h1>
+      <p class="brand-tagline" data-i18n="brand_tagline">Secure password protection for Comtek</p>
     </div>
 
     <nav class="lang-selector" aria-label="Select language">
@@ -109,7 +128,7 @@
 
     <section class="help" aria-label="What you can do">
       <strong data-i18n="help_title">What you can do</strong>
-      <p class="help-text" data-i18n-html="help_body">Go back and start again from the home page, or try the same action once more. If the problem continues, see <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> for support.</p>
+      <p class="help-text" data-i18n="help_body">Please return to the home page and try again. If the issue persists, contact Comtek support.</p>
     </section>
   </main>
   <script>
@@ -137,7 +156,7 @@
       function applyTranslations(locale) {
         var t = T[locale] || T.en;
         document.documentElement.lang = locale;
-        document.title = (locale === 'en' ? 'Change rejected' : t.heading) + ' — Password Pusher';
+        document.title = (locale === 'en' ? 'Change rejected' : t.heading) + ' — Comtek PassProtect';
         document.querySelectorAll('[data-i18n]').forEach(function(el) {
           var key = el.getAttribute('data-i18n');
           if (t[key]) el.textContent = t[key];
@@ -154,58 +173,58 @@
       }
       var T = {
         en: {
-          brand_tagline: 'Go Ahead. Email Another Password.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Change rejected',
           intro: "The request couldn't be completed. This often happens when a link has already been used, the session expired, or the action isn't allowed.",
           btn_home: 'Go to home page',
           btn_try_again: 'Try again',
           help_title: 'What you can do',
-          help_body: 'Go back and start again from the home page, or try the same action once more. If the problem continues, see <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> for support.'
+          help_body: 'Please return to the home page and try again. If the issue persists, contact Comtek support.',
         },
         fr: {
-          brand_tagline: 'Allez-y. Envoyez un autre mot de passe par e-mail.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Modification refusée',
           intro: 'La requête n\'a pas pu aboutir. Cela arrive souvent quand un lien a déjà été utilisé, la session a expiré ou l\'action n\'est pas autorisée.',
           btn_home: 'Aller à l\'accueil',
           btn_try_again: 'Réessayer',
           help_title: 'Que faire',
-          help_body: 'Revenez et recommencez depuis l\'accueil, ou réessayez la même action. Si le problème persiste, consultez <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> pour l\'assistance.'
+          help_body: 'Please return to the home page and try again. If the issue persists, contact Comtek support.',
         },
         de: {
-          brand_tagline: 'Einfach. Noch ein Passwort per E-Mail versenden.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Änderung abgelehnt',
           intro: 'Die Anfrage konnte nicht abgeschlossen werden. Das passiert oft, wenn ein Link bereits verwendet wurde, die Sitzung abgelaufen ist oder die Aktion nicht erlaubt ist.',
           btn_home: 'Zur Startseite',
           btn_try_again: 'Erneut versuchen',
           help_title: 'Was Sie tun können',
-          help_body: 'Gehen Sie zurück und starten Sie von der Startseite neu, oder versuchen Sie die gleiche Aktion erneut. Bei anhaltenden Problemen siehe <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> für Support.'
+          help_body: 'Please return to the home page and try again. If the issue persists, contact Comtek support.',
         },
         nl: {
-          brand_tagline: 'Ga je gang. Stuur nog een wachtwoord per e-mail.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Wijziging geweigerd',
           intro: 'Het verzoek kon niet worden voltooid. Dit gebeurt vaak wanneer een link al is gebruikt, de sessie is verlopen of de actie niet is toegestaan.',
           btn_home: 'Naar startpagina',
           btn_try_again: 'Opnieuw proberen',
           help_title: 'Wat u kunt doen',
-          help_body: 'Ga terug en begin opnieuw vanaf de startpagina, of probeer dezelfde actie nog eens. Als het probleem aanhoudt, zie <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> voor ondersteuning.'
+          help_body: 'Please return to the home page and try again. If the issue persists, contact Comtek support.',
         },
         es: {
-          brand_tagline: 'Adelante. Envíe otra contraseña por correo.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Cambio rechazado',
           intro: 'No se pudo completar la solicitud. Suele ocurrir cuando un enlace ya se usó, la sesión expiró o la acción no está permitida.',
           btn_home: 'Ir al inicio',
           btn_try_again: 'Intentar de nuevo',
           help_title: 'Qué puede hacer',
-          help_body: 'Vuelva y empiece de nuevo desde el inicio, o intente la misma acción otra vez. Si el problema continúa, consulte <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> para soporte.'
+          help_body: 'Please return to the home page and try again. If the issue persists, contact Comtek support.',
         },
         it: {
-          brand_tagline: 'Avanti. Invia un\'altra password via email.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Modifica rifiutata',
           intro: 'La richiesta non è stata completata. Succede spesso quando un link è già stato usato, la sessione è scaduta o l\'azione non è consentita.',
           btn_home: 'Vai alla home',
           btn_try_again: 'Riprova',
           help_title: 'Cosa puoi fare',
-          help_body: 'Torna indietro e ricomincia dalla home, o riprova la stessa azione. Se il problema continua, consulta <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> per supporto.'
+          help_body: 'Please return to the home page and try again. If the issue persists, contact Comtek support.',
         }
       };
       var locale = getLocale();

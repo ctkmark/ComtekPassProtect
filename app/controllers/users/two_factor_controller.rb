@@ -2,6 +2,7 @@
 
 class Users::TwoFactorController < ApplicationController
   before_action :authenticate_user!
+  before_action :prevent_sensitive_page_caching
   # show only redirects; do not generate secrets/codes on that hit.
   before_action :ensure_otp_secret, except: %i[destroy show]
   before_action :ensure_backup_codes, except: %i[destroy show]
@@ -41,6 +42,13 @@ class Users::TwoFactorController < ApplicationController
   end
 
   private
+
+  # Setup mutates a cookie-backed session to store one-time recovery codes.
+  # Never reuse a stale QR/verification form with an earlier CSRF token.
+  def prevent_sensitive_page_caching
+    response.headers["Cache-Control"] = "no-store, private"
+    response.headers["Pragma"] = "no-cache"
+  end
 
   def ensure_otp_secret
     current_user.ensure_otp_secret!

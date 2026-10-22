@@ -7,32 +7,25 @@
 <head>
   <%= render partial: "shared/theme_boot" %>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
   <title><%= content_for?(:html_title) ? yield(:html_title) : Settings.brand.title %></title>
-
-  <meta content='width=device-width, initial-scale=1' name='viewport'>
-
+  <meta content="width=device-width, initial-scale=1" name="viewport">
   <%= render partial: "shared/robots_meta" %>
-
   <%= render partial: "shared/layout_icons", cached: true %>
-
   <%= render partial: "application/ga", cached: true %>
   <%= render partial: "application/plausible" %>
-
   <%= csrf_meta_tags %>
   <%= csp_meta_tag if defined?(csp_meta_tag) %>
-
   <%= stylesheet_link_tag PasswordPusher::Theme.stylesheet_logical_name, "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
-  <%= tag.meta name: 'turbo-drive-enabled', content: ENV.key?('TURBO_DRIVE_ENABLED') ? ENV['TURBO_DRIVE_ENABLED'].to_s.downcase : true %>
+  <%= tag.meta name: "turbo-drive-enabled", content: ENV.key?("TURBO_DRIVE_ENABLED") ? ENV["TURBO_DRIVE_ENABLED"].to_s.downcase : true %>
 </head>
-
 <body class="d-flex flex-column min-vh-100">
-
-<div class="container">
-  <%= render partial: 'shared/alerts' %>
-  <%= yield %>
-</div>
-
+  <div class="comtek-recipient-brand">
+    <%= render partial: "shared/brand_logo", locals: {height: 32} %>
+  </div>
+  <main class="container">
+    <%= render partial: "shared/alerts" %>
+    <%= yield %>
+  </main>
 </body>
 </html>

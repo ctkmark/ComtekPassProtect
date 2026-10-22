@@ -1,0 +1,18 @@
+# Example only. Add as a separate vhost in the EXISTING reverse proxy
+# after confirming Documenso's current network/proxy setup.
+# HTTPS/TLS certificate config depends on the current proxy. Do not duplicate
+# listen 443 directives blindly or modify the Documenso vhost.
+server {
+    listen 80;
+    server_name passprotect.comtek.uk.com;
+    location / {
+        proxy_pass http://127.0.0.1:15100;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 60s;
+        client_max_body_size 2m;
+    }
+}
+# Use the existing ACME/certificate workflow to enable HTTPS and redirect HTTP -> HTTPS.

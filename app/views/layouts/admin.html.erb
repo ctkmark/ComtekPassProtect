@@ -17,8 +17,9 @@
       <% if content_for? :title %>
         <%= yield(:title) %> -
       <% end %>
-      <%= _('Administration - Password Pusher') %>
+      <%= _('Administration - Comtek PassProtect') %>
     </title>
+    <%= render partial: "shared/layout_icons" %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag if defined?(csp_meta_tag) %>
     <%= tag.meta name: 'turbo-drive-enabled', content: ENV.key?('TURBO_DRIVE_ENABLED') ? ENV['TURBO_DRIVE_ENABLED'].to_s.downcase : true %>

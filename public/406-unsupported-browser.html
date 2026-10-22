@@ -3,8 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
-  <title>Browser not supported — Password Pusher</title>
+  <meta name="color-scheme" content="light">
+  <link rel="icon" type="image/svg+xml" href="/comtek-passprotect-icon.svg?v=2">
+  <link rel="shortcut icon" href="/favicon.ico?v=2">
+  <title>Browser not supported — Comtek PassProtect</title>
   <style>
     *, *::after, *::before { box-sizing: border-box; }
     html { height: 100%; }
@@ -69,13 +71,30 @@
       .lang-flag:hover { border-color: #4b5563; }
       .lang-flag.active { border-color: #818cf8; }
     }
+      /* Comtek PassProtect white-first appearance, even with a dark OS preference. */
+    html { color-scheme: light; }
+    body { background: #FFFFFF !important; color: #17213A !important;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; }
+    .brand-name { display:flex; justify-content:center; align-items:center; gap:7px;
+      font-size:1.35rem; color:#2B2A29 !important; }
+    .brand-name img { width:46px; height:46px; border-radius:10px; margin-right:3px; }
+    .brand-name .comtek-name { color:#2B2A29 !important; }
+    .brand-name .product-name { color:#4B157B !important; }
+    .brand-tagline, .intro, .help-text { color:#465166 !important; }
+    .heading, .help strong { color:#17213A !important; }
+    .code, .help a { color:#4B157B !important; }
+    .help { background:#F7F7FB !important; border-color:#E5E8EF !important; color:#465166 !important; }
+    .btn-primary { background:#4B157B !important; color:#FFFFFF !important; }
+    .btn-primary:hover { background:#39105D !important; }
+    .btn-secondary { background:#FFFFFF !important; color:#17213A !important; border:1px solid #E5E8EF !important; }
+    .lang-flag.active { border-color:#4B157B !important; }
   </style>
 </head>
 <body>
   <main class="page">
     <div class="brand">
-      <h1 class="brand-name">Password Pusher</h1>
-      <p class="brand-tagline" data-i18n="brand_tagline">Go Ahead. Email Another Password.</p>
+      <h1 class="brand-name"><img src="/comtek-passprotect-icon.svg" width="46" height="46" alt=""><span class="comtek-name">Comtek</span> <span class="product-name">PassProtect</span></h1>
+      <p class="brand-tagline" data-i18n="brand_tagline">Secure password protection for Comtek</p>
     </div>
 
     <nav class="lang-selector" aria-label="Select language">
@@ -89,10 +108,10 @@
 
     <p class="code" aria-hidden="true">406</p>
     <h2 class="heading" data-i18n="heading">Browser not supported</h2>
-    <p class="intro" data-i18n="intro">Password Pusher needs a modern browser to work properly. Please upgrade or switch to a supported browser.</p>
+    <p class="intro" data-i18n="intro">Comtek PassProtect needs a modern browser to work properly. Please upgrade or switch to a supported browser.</p>
 
     <div class="actions">
-      <a href="https://docs.pwpush.com" class="btn btn-primary" target="_blank" rel="noopener" data-i18n="btn_docs">View documentation</a>
+      <a href="/" class="btn btn-primary" data-i18n="btn_docs">Return to Comtek PassProtect</a>
     </div>
 
     <section class="help" aria-label="What you can do">
@@ -100,7 +119,7 @@
       <ul>
         <li data-i18n="help_1">Update your browser to the latest version (Chrome, Firefox, Safari, or Edge).</li>
         <li data-i18n="help_2">If you can't update, try a different device or browser.</li>
-        <li data-i18n-html="help_3">See <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> for more help.</li>
+        <li data-i18n="help_3">If this continues, contact Comtek support.</li>
       </ul>
     </section>
   </main>
@@ -129,7 +148,7 @@
       function applyTranslations(locale) {
         var t = T[locale] || T.en;
         document.documentElement.lang = locale;
-        document.title = (locale === 'en' ? 'Browser not supported' : t.heading) + ' — Password Pusher';
+        document.title = (locale === 'en' ? 'Browser not supported' : t.heading) + ' — Comtek PassProtect';
         document.querySelectorAll('[data-i18n]').forEach(function(el) {
           var key = el.getAttribute('data-i18n');
           if (t[key]) el.textContent = t[key];
@@ -146,64 +165,64 @@
       }
       var T = {
         en: {
-          brand_tagline: 'Go Ahead. Email Another Password.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Browser not supported',
-          intro: 'Password Pusher needs a modern browser to work properly. Please upgrade or switch to a supported browser.',
-          btn_docs: 'View documentation',
+          intro: 'Comtek PassProtect needs a modern browser to work properly. Please upgrade or switch to a supported browser.',
+          btn_docs: 'Return to Comtek PassProtect',
           help_title: 'What you can do',
           help_1: 'Update your browser to the latest version (Chrome, Firefox, Safari, or Edge).',
           help_2: "If you can't update, try a different device or browser.",
-          help_3: 'See <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> for more help.'
+          help_3: 'If this continues, contact Comtek support.',
         },
         fr: {
-          brand_tagline: 'Allez-y. Envoyez un autre mot de passe par e-mail.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Navigateur non pris en charge',
-          intro: 'Password Pusher nécessite un navigateur moderne pour fonctionner. Veuillez mettre à jour ou utiliser un navigateur pris en charge.',
-          btn_docs: 'Voir la documentation',
+          intro: 'Comtek PassProtect nécessite un navigateur moderne pour fonctionner. Veuillez mettre à jour ou utiliser un navigateur pris en charge.',
+          btn_docs: 'Return to Comtek PassProtect',
           help_title: 'Que faire',
           help_1: 'Mettez à jour votre navigateur vers la dernière version (Chrome, Firefox, Safari ou Edge).',
           help_2: 'Si vous ne pouvez pas mettre à jour, essayez un autre appareil ou navigateur.',
-          help_3: 'Consultez <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> pour plus d\'aide.'
+          help_3: 'If this continues, contact Comtek support.',
         },
         de: {
-          brand_tagline: 'Einfach. Noch ein Passwort per E-Mail versenden.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Browser wird nicht unterstützt',
-          intro: 'Password Pusher benötigt einen modernen Browser. Bitte aktualisieren Sie Ihren Browser oder wechseln Sie zu einem unterstützten Browser.',
-          btn_docs: 'Dokumentation anzeigen',
+          intro: 'Comtek PassProtect benötigt einen modernen Browser. Bitte aktualisieren Sie Ihren Browser oder wechseln Sie zu einem unterstützten Browser.',
+          btn_docs: 'Return to Comtek PassProtect',
           help_title: 'Was Sie tun können',
           help_1: 'Aktualisieren Sie Ihren Browser auf die neueste Version (Chrome, Firefox, Safari oder Edge).',
           help_2: 'Wenn Sie nicht aktualisieren können, versuchen Sie ein anderes Gerät oder einen anderen Browser.',
-          help_3: 'Weitere Hilfe unter <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a>.'
+          help_3: 'If this continues, contact Comtek support.',
         },
         nl: {
-          brand_tagline: 'Ga je gang. Stuur nog een wachtwoord per e-mail.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Browser niet ondersteund',
-          intro: 'Password Pusher heeft een moderne browser nodig. Werk bij naar de nieuwste versie of gebruik een ondersteunde browser.',
-          btn_docs: 'Documentatie bekijken',
+          intro: 'Comtek PassProtect heeft een moderne browser nodig. Werk bij naar de nieuwste versie of gebruik een ondersteunde browser.',
+          btn_docs: 'Return to Comtek PassProtect',
           help_title: 'Wat u kunt doen',
           help_1: 'Werk uw browser bij naar de nieuwste versie (Chrome, Firefox, Safari of Edge).',
           help_2: 'Als u niet kunt bijwerken, probeer een ander apparaat of een andere browser.',
-          help_3: 'Zie <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> voor meer hulp.'
+          help_3: 'If this continues, contact Comtek support.',
         },
         es: {
-          brand_tagline: 'Adelante. Envíe otra contraseña por correo.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Navegador no compatible',
-          intro: 'Password Pusher necesita un navegador moderno. Actualice o cambie a un navegador compatible.',
-          btn_docs: 'Ver documentación',
+          intro: 'Comtek PassProtect necesita un navegador moderno. Actualice o cambie a un navegador compatible.',
+          btn_docs: 'Return to Comtek PassProtect',
           help_title: 'Qué puede hacer',
           help_1: 'Actualice su navegador a la última versión (Chrome, Firefox, Safari o Edge).',
           help_2: 'Si no puede actualizar, pruebe otro dispositivo o navegador.',
-          help_3: 'Consulte <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> para más ayuda.'
+          help_3: 'If this continues, contact Comtek support.',
         },
         it: {
-          brand_tagline: 'Avanti. Invia un\'altra password via email.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Browser non supportato',
-          intro: 'Password Pusher richiede un browser moderno. Aggiorna o passa a un browser supportato.',
-          btn_docs: 'Visualizza documentazione',
+          intro: 'Comtek PassProtect richiede un browser moderno. Aggiorna o passa a un browser supportato.',
+          btn_docs: 'Return to Comtek PassProtect',
           help_title: 'Cosa puoi fare',
           help_1: 'Aggiorna il browser all\'ultima versione (Chrome, Firefox, Safari o Edge).',
           help_2: 'Se non puoi aggiornare, prova un altro dispositivo o browser.',
-          help_3: 'Consulta <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> per ulteriore assistenza.'
+          help_3: 'If this continues, contact Comtek support.',
         }
       };
       var locale = getLocale();

@@ -70,7 +70,7 @@
             class: "btn btn-outline-danger",
             form: { data: { turbo_confirm: _("Are you sure?") } } %>
         <% else %>
-          <%= link_to _("Set up two-factor authentication"), backup_codes_user_two_factor_path, class: "btn btn-secondary" %>
+          <%= link_to _("Set up two-factor authentication"), backup_codes_user_two_factor_path, class: "btn btn-secondary", data: {turbo: false} %>
         <% end %>
       </div>
 

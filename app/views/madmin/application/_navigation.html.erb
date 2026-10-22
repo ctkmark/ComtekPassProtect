@@ -2,11 +2,10 @@
 <div class="d-flex flex-column justify-content-center align-items-center gap-2 mt-4 pb-4 border-bottom">
   <div>
     <%= link_to root_path do %>
-      <%= image_tag asset_path("naked-logo.png"), class: "img-fluid", style: "max-height: 60px;" %>
+      <%= render partial: "shared/brand_logo", locals: {height: 42} %>
     <% end %>
   </div>
   <div class="text-center">
-    <p class="h6 fw-bold text-dark mb-1">Password Pusher</p>
     <h1 class="h6 fw-semibold">
       <%= link_to madmin_root_path, class: "text-muted text-decoration-none" do %>
         Administration Center
