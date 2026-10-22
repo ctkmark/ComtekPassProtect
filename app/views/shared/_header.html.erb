@@ -28,7 +28,7 @@
               <li><hr class="dropdown-divider"></li>
             <% end %>
             <li>
-              <%= link_to edit_user_registration_path, class: "dropdown-item d-flex align-items-center gap-2 py-2" do %>
+              <%= link_to edit_user_registration_path, class: "dropdown-item d-flex align-items-center gap-2 py-2", data: {turbo: false} do %>
                 <em class="bi bi-pencil-square" aria-hidden="true"></em>
                 <%= _("Edit Login Details") %>
               <% end %>
