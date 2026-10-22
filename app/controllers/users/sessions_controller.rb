@@ -97,11 +97,8 @@ class Users::SessionsController < Devise::SessionsController
     session.delete(:remember_me)
   end
 
-  # after_sign_out_path_for
-  #
-  # This method is called after the user has signed out.
-  # Ensure the session data is cleared and the session cookie is deleted.
-  #
+  # Let Devise/Warden perform the session and cookie cleanup exactly once.
+  # A manual reset here can invalidate a CSRF token on the redirected page.
   def reject_when_logins_disabled
     return unless Settings.disable_logins
 
@@ -112,12 +109,6 @@ class Users::SessionsController < Devise::SessionsController
   # other non-HTML formats) on the unsuffixed path before password or OTP checks.
   def reject_non_html_format
     head :not_acceptable unless request.format.html?
-  end
-
-  def after_sign_out_path_for(resource_or_scope)
-    reset_session  # Explicitly clear the session data
-    cookies.delete("_PasswordPusher_session") # Delete the session cookie
-    root_path      # Redirect to the root path after logout
   end
 
   private
