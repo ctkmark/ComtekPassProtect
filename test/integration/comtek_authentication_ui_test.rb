@@ -3,6 +3,13 @@
 require "test_helper"
 
 class ComtekAuthenticationUiTest < ActionDispatch::IntegrationTest
+  test "login page is not cached and still includes a CSRF form token" do
+    get new_user_session_path
+    assert_response :success
+    assert_equal "no-store, private", response.headers["Cache-Control"]
+    assert_select 'form input[name="authenticity_token"]'
+  end
+
   test "sign out uses a normal browser form rather than Turbo" do
     sign_in users(:mr_admin)
     get root_path
