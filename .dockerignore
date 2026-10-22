@@ -7,3 +7,7 @@
 .dockerenv*
 tmp/
 node_modules
+
+# Exclude nested live configuration and secrets from Docker build context.
+**/.env*
+deploy/.env.passprotect
