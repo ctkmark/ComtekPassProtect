@@ -9,6 +9,8 @@ class Users::SessionsController < Devise::SessionsController
 
   layout "login"
 
+  before_action :prevent_login_form_caching, only: [:new, :create]
+
   # Prepend so this runs before Devise::SessionsController#create (warden.authenticate! would
   # otherwise sign in with password only and bypass the OTP step).
   # Register the format reject last so it runs first (prepended callbacks run in reverse order).
@@ -112,6 +114,13 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   private
+
+  # A browser must never reuse the CSRF-protected sign-in or OTP form from
+  # before a logout or session rotation.
+  def prevent_login_form_caching
+    response.headers["Cache-Control"] = "no-store, private"
+    response.headers["Pragma"] = "no-cache"
+  end
 
   def otp_attempt_limit_exceeded?(user)
     count = Rails.cache.increment(
