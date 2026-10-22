@@ -33,6 +33,47 @@
 
   <!-- Content -->
   <div class="card-body">
+    <section class="border rounded-3 p-3 p-md-4 mb-5" aria-labelledby="create-account-title">
+      <h2 class="h5 fw-semibold text-dark mb-2" id="create-account-title">Create staff account</h2>
+      <p class="small comtek-supporting-text">
+        Administrators can provision standard users and additional administrators.
+        Enter an initial password, share it privately and ask the new user to
+        change it from Account settings after signing in. No email invitation is sent.
+        Public registration remains disabled.
+      </p>
+      <% if @new_user&.errors&.any? %>
+        <div class="alert alert-danger" role="alert">
+          <strong>Account not created.</strong>
+          <ul class="mb-0">
+            <% @new_user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      <%= form_with url: admin_users_path, scope: :user, method: :post, data: {turbo: false} do |form| %>
+        <div class="row g-3">
+          <div class="col-md-7">
+            <%= form.label :email, "Staff email address", class: "form-label" %>
+            <%= form.email_field :email, value: @new_user&.email, class: "form-control", autocomplete: "off", required: true %>
+          </div>
+          <div class="col-md-5">
+            <%= form.label :role, "Account role", class: "form-label" %>
+            <%= form.select :role, [["Standard user", "standard"], ["Administrator", "admin"]], {}, class: "form-select", required: true %>
+          </div>
+          <div class="col-md-6">
+            <%= form.label :password, "Initial password", class: "form-label" %>
+            <%= form.password_field :password, class: "form-control", autocomplete: "new-password", minlength: 10, required: true %>
+          </div>
+          <div class="col-md-6">
+            <%= form.label :password_confirmation, "Confirm initial password", class: "form-label" %>
+            <%= form.password_field :password_confirmation, class: "form-control", autocomplete: "new-password", minlength: 10, required: true %>
+          </div>
+        </div>
+        <p class="small text-muted mt-3 mb-2">Use a unique password of at least 10 characters. Do not reuse your own administrator password.</p>
+        <%= form.submit "Create account", class: "btn btn-primary" %>
+      <% end %>
+    </section>
     <!-- Current Administrators -->
     <div class="mb-5">
       <h2 class="h5 fw-semibold text-dark mb-4 d-flex align-items-center">
