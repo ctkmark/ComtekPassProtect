@@ -2,7 +2,7 @@ authenticated :user, lambda { |u| u.admin? } do
   get "/admin", to: "admin#index", as: :admin_root
 
   namespace :admin do
-    resources :users, only: [:index, :destroy] do
+    resources :users, only: [:index, :create, :destroy] do
       member do
         patch :promote
         patch :revoke
