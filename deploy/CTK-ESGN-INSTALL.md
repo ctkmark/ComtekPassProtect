@@ -147,7 +147,7 @@ The repository includes a **guarded, server-specific** installer, `deploy/instal
 - creates a root-only, timestamped archive of the existing Nginx configuration;
 - creates a temporary HTTP-01 challenge route, preserving the eSign site;
 - obtains a separate Let's Encrypt certificate using Certbot's webroot authenticator;
-- installs HTTPS reverse proxying to `127.0.0.1:15100`, with access logging disabled for bearer secret URLs and a no-referrer response policy;
+- installs HTTPS reverse proxying to `127.0.0.1:15100`, with access logging disabled for bearer secret URLs and a strict-origin response policy (privacy-safe and compatible with Rails CSRF origin validation);
 - validates both new PassProtect HTTPS and existing eSign HTTPS;
 - adds a dedicated certificate-renewal Nginx reload hook;
 - removes **only the newly created** Nginx site and reloads the original configuration on error.
@@ -223,3 +223,40 @@ Do not run a factory reset for this upgrade.
 Testing note: the new integration and browser regression tests are committed
 but have not been run against the live host. Do not declare the 422 resolved
 until browser checks pass.
+
+---
+
+## ctk-esgn root-cause fix for HTTP 422: Referrer-Policy
+
+Production logs showed Rails `ActionController::InvalidAuthenticityToken` with
+`The browser returned a 'null' origin` on login and authenticator POSTs.
+The original PassProtect HTTPS vhost set `Referrer-Policy: no-referrer`.
+That policy makes browsers emit `Origin: null` for normal HTML form POSTs.
+Rails rejects that origin before a valid CSRF token can be considered.
+
+Use `Referrer-Policy: strict-origin` instead. It exposes only
+`https://passprotect.comtek.uk.com` as referrer when permitted, not
+password-sharing URL paths or secret tokens. CSRF origin checking
+and CSRF authenticity tokens remain enabled. Never fix this by disabling
+`forgery_protection_origin_check` or request forgery protection.
+
+On ctk-esgn, after the Docker image deployment completes, apply the
+dedicated Nginx-only patch (it backs up and can restore the vhost):
+
+    cd /opt/comtek-passprotect
+    git pull --ff-only
+    bash -n deploy/fix-422-referrer-policy-ctk-esgn.sh
+    bash deploy/fix-422-referrer-policy-ctk-esgn.sh
+
+The script validates the PassProtect site symlink, replaces exactly the
+expected policy, verifies the served HTTPS headers and the health of both
+Comtek PassProtect and Comtek Sign, and restores the old site on failure.
+It does not rebuild any image, rotate keys, or change the eSign site.
+
+After success, open a completely fresh PassProtect sign-in page in a new
+private tab. Verify: login, logout/login, authenticator enrollment and
+staff-account creation. A page loaded before the header correction still
+has its old policy and must be reloaded.
+
+Technical reference: MDN Referrer-Policy > Effect on the Origin header;
+Rails 8.1 ActionController::RequestForgeryProtection#valid_request_origin?.
