@@ -172,7 +172,9 @@ server {
     # URLs contain bearer tokens: don't save those paths in access logs.
     access_log off;
     client_max_body_size 2m;
-    add_header Referrer-Policy "no-referrer" always;
+    # Avoid Origin: null on same-origin HTML form POSTs (Rails rejects this).
+    # Referrers carry only the HTTPS origin, never secret-share URL paths.
+    add_header Referrer-Policy "strict-origin" always;
     add_header X-Content-Type-Options "nosniff" always;
 
     location / {
