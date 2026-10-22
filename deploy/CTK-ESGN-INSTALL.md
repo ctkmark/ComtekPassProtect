@@ -171,3 +171,55 @@ sudo certbot renew --dry-run --cert-name passprotect.comtek.uk.com
 ```
 
 Create the initial administrator via the first-run page, taking the **boot code from server logs only**. Never paste boot codes, app secrets, or real password-share URLs into chat or tickets.
+
+---
+
+## Staff accounts, logout and authenticator setup
+
+This Comtek deployment disables public self-registration. After this patch, an
+existing administrator can visit Administration Center > Staff Accounts, and
+create a Standard user or Administrator using a unique initial password.
+These are admin-provisioned accounts; no SMTP invite email is sent.
+Share the password securely and have the recipient immediately change it in
+Account > Edit Login Details. Never send passwords in GitHub or an SSH log.
+
+Microsoft Authenticator works with the built-in TOTP QR enrollment:
+Account > Edit Login Details > Set up two-factor authentication >
+Save backup codes > Continue to verify > Enter the six-digit code.
+This is not Microsoft Entra SSO; that is a separate Pro-edition capability.
+
+The observed failures included 13 InvalidAuthenticityToken exceptions.
+The patch removes an extra custom cookie/session reset on logout,
+uses full-page navigation for logout and authenticator enrollment,
+and marks authentication and 2FA response pages as no-store.
+CSRF protection stays enabled. These are targeted mitigations for
+potential stale-token flows; confirm them with browser tests.
+
+### Deployment
+
+Run from the SSH session on ctk-esgn:
+
+    cd /opt/comtek-passprotect
+    git pull --ff-only
+    bash -n deploy/apply-branding-ctk-esgn.sh
+    bash deploy/apply-branding-ctk-esgn.sh
+
+The script backs up the PassProtect volume and key file, preserves the prior
+image for rollback, and verifies both PassProtect and Comtek Sign.
+Do not run a factory reset for this upgrade.
+
+### Acceptance test
+
+1. Existing admin: sign in, log out, sign in again without HTTP 422.
+2. Enrol Microsoft Authenticator, use a new six-digit code, save backup
+   codes, log out and verify that MFA is required next time.
+3. As admin create one Standard user and one Administrator; use unique
+   initial passwords. Verify their respective access restrictions.
+4. Confirm standard user cannot create staff or reach admin pages.
+5. Confirm anonymous recipients can still open test secret links.
+6. Confirm Comtek Sign continues to work with document signing.
+7. Inspect only sanitized error categories if CSRF failures continue.
+
+Testing note: the new integration and browser regression tests are committed
+but have not been run against the live host. Do not declare the 422 resolved
+until browser checks pass.
