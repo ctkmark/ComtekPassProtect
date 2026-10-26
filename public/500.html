@@ -3,8 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
-  <title>Something went wrong — Password Pusher</title>
+  <meta name="color-scheme" content="light">
+  <link rel="icon" type="image/svg+xml" href="/comtek-passprotect-icon.svg?v=2">
+  <link rel="shortcut icon" href="/favicon.ico?v=2">
+  <title>Something went wrong — Comtek PassProtect</title>
   <style>
     *, *::after, *::before { box-sizing: border-box; }
     html { height: 100%; }
@@ -171,13 +173,30 @@
       .lang-flag:hover { border-color: #4b5563; }
       .lang-flag.active { border-color: #818cf8; }
     }
+      /* Comtek PassProtect white-first appearance, even with a dark OS preference. */
+    html { color-scheme: light; }
+    body { background: #FFFFFF !important; color: #17213A !important;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; }
+    .brand-name { display:flex; justify-content:center; align-items:center; gap:7px;
+      font-size:1.35rem; color:#2B2A29 !important; }
+    .brand-name img { width:46px; height:46px; border-radius:10px; margin-right:3px; }
+    .brand-name .comtek-name { color:#2B2A29 !important; }
+    .brand-name .product-name { color:#4B157B !important; }
+    .brand-tagline, .intro, .help-text { color:#465166 !important; }
+    .heading, .help strong { color:#17213A !important; }
+    .code, .help a { color:#4B157B !important; }
+    .help { background:#F7F7FB !important; border-color:#E5E8EF !important; color:#465166 !important; }
+    .btn-primary { background:#4B157B !important; color:#FFFFFF !important; }
+    .btn-primary:hover { background:#39105D !important; }
+    .btn-secondary { background:#FFFFFF !important; color:#17213A !important; border:1px solid #E5E8EF !important; }
+    .lang-flag.active { border-color:#4B157B !important; }
   </style>
 </head>
 <body>
   <main class="page">
     <div class="brand">
-      <h1 class="brand-name">Password Pusher</h1>
-      <p class="brand-tagline" data-i18n="brand_tagline">Go Ahead. Email Another Password.</p>
+      <h1 class="brand-name"><img src="/comtek-passprotect-icon.svg" width="46" height="46" alt=""><span class="comtek-name">Comtek</span> <span class="product-name">PassProtect</span></h1>
+      <p class="brand-tagline" data-i18n="brand_tagline">Secure password protection for Comtek</p>
     </div>
 
     <nav class="lang-selector" aria-label="Select language">
@@ -203,7 +222,7 @@
       <ol>
         <li data-i18n-html="help_1">Wait a moment and <strong>try again</strong> — many errors are temporary.</li>
         <li data-i18n-html="help_2">Use the <strong>home page</strong> link above to start a new push.</li>
-        <li data-i18n-html="help_3">If this keeps happening, check <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> for status and support.</li>
+        <li data-i18n="help_3">If this continues, contact Comtek support.</li>
       </ol>
     </section>
   </main>
@@ -232,7 +251,7 @@
       function applyTranslations(locale) {
         var t = T[locale] || T.en;
         document.documentElement.lang = locale;
-        document.title = (locale === 'en' ? 'Something went wrong' : t.heading) + ' — Password Pusher';
+        document.title = (locale === 'en' ? 'Something went wrong' : t.heading) + ' — Comtek PassProtect';
         document.querySelectorAll('[data-i18n]').forEach(function(el) {
           var key = el.getAttribute('data-i18n');
           if (t[key]) el.textContent = t[key];
@@ -249,7 +268,7 @@
       }
       var T = {
         en: {
-          brand_tagline: 'Go Ahead. Email Another Password.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Something went wrong',
           intro: "We hit an error on our side. Your request wasn't completed, but nothing was lost.",
           btn_home: 'Go to home page',
@@ -257,10 +276,10 @@
           help_title: 'What you can do',
           help_1: 'Wait a moment and <strong>try again</strong> — many errors are temporary.',
           help_2: 'Use the <strong>home page</strong> link above to start a new push.',
-          help_3: 'If this keeps happening, check <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> for status and support.'
+          help_3: 'If this continues, contact Comtek support.',
         },
         fr: {
-          brand_tagline: 'Allez-y. Envoyez un autre mot de passe par e-mail.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Une erreur s\'est produite',
           intro: 'Une erreur s\'est produite de notre côté. Votre requête n\'a pas abouti, mais rien n\'a été perdu.',
           btn_home: 'Aller à l\'accueil',
@@ -268,10 +287,10 @@
           help_title: 'Que faire',
           help_1: 'Attendez un instant et <strong>réessayez</strong> — beaucoup d\'erreurs sont temporaires.',
           help_2: 'Utilisez le lien <strong>accueil</strong> ci-dessus pour créer un nouveau push.',
-          help_3: 'Si le problème persiste, consultez <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> pour le statut et l\'assistance.'
+          help_3: 'If this continues, contact Comtek support.',
         },
         de: {
-          brand_tagline: 'Einfach. Noch ein Passwort per E-Mail versenden.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Etwas ist schiefgelaufen',
           intro: 'Auf unserer Seite ist ein Fehler aufgetreten. Ihre Anfrage konnte nicht abgeschlossen werden, aber es ist nichts verloren gegangen.',
           btn_home: 'Zur Startseite',
@@ -279,10 +298,10 @@
           help_title: 'Was Sie tun können',
           help_1: 'Warten Sie einen Moment und <strong>versuchen Sie es erneut</strong> — viele Fehler sind vorübergehend.',
           help_2: 'Nutzen Sie den Link zur <strong>Startseite</strong> oben, um einen neuen Push zu erstellen.',
-          help_3: 'Wenn das weiter passiert, sehen Sie auf <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> nach Status und Support.'
+          help_3: 'If this continues, contact Comtek support.',
         },
         nl: {
-          brand_tagline: 'Ga je gang. Stuur nog een wachtwoord per e-mail.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Er is iets misgegaan',
           intro: 'Er is een fout aan onze kant opgetreden. Uw verzoek is niet voltooid, maar er is niets verloren gegaan.',
           btn_home: 'Naar startpagina',
@@ -290,10 +309,10 @@
           help_title: 'Wat u kunt doen',
           help_1: 'Wacht even en <strong>probeer opnieuw</strong> — veel fouten zijn tijdelijk.',
           help_2: 'Gebruik de link naar de <strong>startpagina</strong> hierboven om een nieuwe push te maken.',
-          help_3: 'Als dit blijft gebeuren, kijk op <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> voor status en ondersteuning.'
+          help_3: 'If this continues, contact Comtek support.',
         },
         es: {
-          brand_tagline: 'Adelante. Envíe otra contraseña por correo.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Algo salió mal',
           intro: 'Ocurrió un error por nuestra parte. Su solicitud no se completó, pero no se perdió nada.',
           btn_home: 'Ir al inicio',
@@ -301,10 +320,10 @@
           help_title: 'Qué puede hacer',
           help_1: 'Espere un momento y <strong>vuelva a intentar</strong> — muchos errores son temporales.',
           help_2: 'Use el enlace de <strong>inicio</strong> de arriba para crear un nuevo push.',
-          help_3: 'Si sigue ocurriendo, consulte <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> para estado y soporte.'
+          help_3: 'If this continues, contact Comtek support.',
         },
         it: {
-          brand_tagline: 'Avanti. Invia un\'altra password via email.',
+          brand_tagline: 'Secure password protection for Comtek',
           heading: 'Qualcosa è andato storto',
           intro: 'Si è verificato un errore da parte nostra. La richiesta non è stata completata, ma non si è perso nulla.',
           btn_home: 'Vai alla home',
@@ -312,7 +331,7 @@
           help_title: 'Cosa puoi fare',
           help_1: 'Attendi un momento e <strong>riprova</strong> — molti errori sono temporanei.',
           help_2: 'Usa il link alla <strong>home</strong> sopra per creare un nuovo push.',
-          help_3: 'Se continua ad accadere, consulta <a href="https://docs.pwpush.com" target="_blank" rel="noopener">docs.pwpush.com</a> per stato e supporto.'
+          help_3: 'If this continues, contact Comtek support.',
         }
       };
       var locale = getLocale();

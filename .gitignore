@@ -674,3 +674,6 @@ bin/*.rb
 .cursor
 
 
+
+# Comtek PassProtect production secrets (never commit).
+/deploy/.env.passprotect

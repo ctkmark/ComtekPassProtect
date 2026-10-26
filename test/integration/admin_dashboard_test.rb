@@ -53,7 +53,7 @@ class AdminDashboardTest < ActionDispatch::IntegrationTest
 
     get admin_users_path
     assert_response :success
-    assert_select "a", text: "Admin Users"
+    assert_select "a", text: "Staff Accounts"
 
     get "/admin/jobs"
     assert_response :success

@@ -1,11 +1,25 @@
-<div class="container h-100">
-  <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
-    <p>
-      <%= link_to _("Click Here to Proceed"), @secret_url,
-        "data-turbo-prefetch": false,
-        "data-turbolinks": false,
-        "data-turbo": false,
-        rel: "no-prefetch" %>
+<% plain_title(_("Secure delivery")) %>
+
+<section class="container py-5" aria-labelledby="comtek-retrieval-heading">
+  <div class="comtek-setup-card text-center mx-auto shadow-sm">
+    <div class="mb-3">
+      <em class="bi bi-shield-lock text-primary fs-1" aria-hidden="true"></em>
+    </div>
+    <h1 id="comtek-retrieval-heading" class="h3 fw-semibold mb-3"><%= _("Your secure link is ready") %></h1>
+    <p class="text-muted mb-3">
+      <%= _("This extra step helps prevent automated link previews from opening the secret.") %>
     </p>
+    <p class="text-muted small mb-4">
+      <%= _("Only continue when you're ready to view the content. Opening the secret may use one of its allowed views.") %>
+    </p>
+
+    <%= link_to @secret_url,
+      class: "btn btn-primary btn-lg px-4 py-3 w-100",
+      "data-turbo-prefetch": false,
+      "data-turbolinks": false,
+      "data-turbo": false,
+      rel: "no-prefetch" do %>
+      <em class="bi bi-lock-fill me-2" aria-hidden="true"></em><%= _("Continue to secret") %>
+    <% end %>
   </div>
-</div>
+</section>

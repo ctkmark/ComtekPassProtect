@@ -9,6 +9,8 @@ class Users::SessionsController < Devise::SessionsController
 
   layout "login"
 
+  before_action :prevent_login_form_caching, only: [:new, :create]
+
   # Prepend so this runs before Devise::SessionsController#create (warden.authenticate! would
   # otherwise sign in with password only and bypass the OTP step).
   # Register the format reject last so it runs first (prepended callbacks run in reverse order).
@@ -97,11 +99,8 @@ class Users::SessionsController < Devise::SessionsController
     session.delete(:remember_me)
   end
 
-  # after_sign_out_path_for
-  #
-  # This method is called after the user has signed out.
-  # Ensure the session data is cleared and the session cookie is deleted.
-  #
+  # Let Devise/Warden perform the session and cookie cleanup exactly once.
+  # A manual reset here can invalidate a CSRF token on the redirected page.
   def reject_when_logins_disabled
     return unless Settings.disable_logins
 
@@ -114,13 +113,14 @@ class Users::SessionsController < Devise::SessionsController
     head :not_acceptable unless request.format.html?
   end
 
-  def after_sign_out_path_for(resource_or_scope)
-    reset_session  # Explicitly clear the session data
-    cookies.delete("_PasswordPusher_session") # Delete the session cookie
-    root_path      # Redirect to the root path after logout
-  end
-
   private
+
+  # A browser must never reuse the CSRF-protected sign-in or OTP form from
+  # before a logout or session rotation.
+  def prevent_login_form_caching
+    response.headers["Cache-Control"] = "no-store, private"
+    response.headers["Pragma"] = "no-cache"
+  end
 
   def otp_attempt_limit_exceeded?(user)
     count = Rails.cache.increment(

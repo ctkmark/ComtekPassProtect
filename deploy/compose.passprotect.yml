@@ -1,0 +1,50 @@
+# Comtek PassProtect. Run with:
+# docker compose -f deploy/compose.passprotect.yml --env-file deploy/.env.passprotect up -d --build
+# NOTE: shares no exposed ports with Documenso. Existing reverse proxy continues to own 443.
+services:
+  passprotect:
+    build:
+      context: ..
+      dockerfile: containers/docker/Dockerfile
+    image: comtek/passprotect:local
+    container_name: comtek-passprotect
+    restart: unless-stopped
+    platform: linux/amd64
+    ports:
+      - "127.0.0.1:15100:5100"
+    environment:
+      RAILS_ENV: production
+      PORT: "5100"
+      SECRET_KEY_BASE: "${PASS_PROTECT_SECRET_KEY_BASE:?Set in deploy/.env.passprotect}"
+      PWPUSH_MASTER_KEY: "${PASS_PROTECT_MASTER_KEY:?Set in deploy/.env.passprotect}"
+      PWP__HOST_DOMAIN: "passprotect.comtek.uk.com"
+      PWP__HOST_PROTOCOL: "https"
+      PWP__OVERRIDE_BASE_URL: "https://passprotect.comtek.uk.com"
+      PWP__ALLOWED_HOSTS: "passprotect.comtek.uk.com"
+      PWP__BRAND__TITLE: "Comtek PassProtect"
+      PWP__BRAND__TAGLINE: "Secure password protection for Comtek"
+      PWP__BRAND__SHOW_FOOTER_MENU: "false"
+      PWP__THEME_MODE: "light"
+      PWP__ALLOW_ANONYMOUS: "false"
+      PWP__DISABLE_SIGNUPS: "true"
+      PWP__DISABLE_LOGINS: "false"
+      PWP__NOINDEX: "true"
+      PWP__SECURE_COOKIES: "true"
+      PWP__PW__EXPIRE_AFTER_DAYS_DEFAULT: "7"
+      PWP__PW__EXPIRE_AFTER_VIEWS_DEFAULT: "3"
+      PWP__PW__RETRIEVAL_STEP_DEFAULT: "true"
+      PWP__ENABLE_FILE_PUSHES: "false"
+      PWP__ENABLE_URL_PUSHES: "false"
+      PWP__ENABLE_QR_PUSHES: "false"
+    volumes:
+      - passprotect-storage:/opt/PasswordPusher/storage
+    healthcheck:
+      # Rails only authorizes the public hostname. Keep this check on that host
+      # instead of opening the application to localhost/127.0.0.1 hosts.
+      test: ["CMD", "curl", "-fsS", "-H", "Host: passprotect.comtek.uk.com", "http://127.0.0.1:5100/up"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+volumes:
+  passprotect-storage:

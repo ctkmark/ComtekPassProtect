@@ -65,6 +65,9 @@ class FilePushRetrievalTest < ActionDispatch::IntegrationTest
     links = css_select "a"
     assert(links)
     assert_equal 1, links.length
-    assert_equal "Click Here to Proceed", links.first.content
+    assert_equal "Continue to secret", links.first.text.strip
+    assert_includes links.first["class"], "btn-primary"
+    assert_equal "false", links.first["data-turbo"]
+    assert_equal "false", links.first["data-turbo-prefetch"]
   end
 end

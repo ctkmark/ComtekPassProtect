@@ -34,7 +34,7 @@ class TwoFactorLoginTest < ApplicationSystemTestCase
     visit new_user_session_path
     fill_in "user_email", with: @user.email
     fill_in "user_password", with: "password12345"
-    click_button I18n.t("devise.general.login")
+    click_button "Sign in with email"
     assert_field "otp_attempt", wait: 10
     assert_selector "h2", text: "Two-factor authentication", wait: 10
   end
@@ -43,7 +43,7 @@ class TwoFactorLoginTest < ApplicationSystemTestCase
     visit new_user_session_path
     fill_in "user_email", with: @user.email
     fill_in "user_password", with: "password12345"
-    click_button I18n.t("devise.general.login")
+    click_button "Sign in with email"
     fill_in "otp_attempt", with: totp_code_for(@user)
     click_button "Verify"
     assert_current_path root_path, wait: 10
@@ -53,12 +53,61 @@ class TwoFactorLoginTest < ApplicationSystemTestCase
     visit new_user_session_path
     fill_in "user_email", with: @user.email
     fill_in "user_password", with: "password12345"
-    click_button I18n.t("devise.general.login")
+    click_button "Sign in with email"
     # Avoid numeric-only codes that could accidentally match the current TOTP window.
     fill_in "otp_attempt", with: "notatotp"
     click_button "Verify"
     assert_text "Two-factor authentication"
     assert_text "Incorrect verification code."
+  end
+
+  test "2FA enrollment succeeds after full-page navigation" do
+    @user.update!(
+      otp_required_for_login: false,
+      otp_secret: nil,
+      otp_backup_code_digests: [],
+      last_otp_timestep: nil
+    )
+
+    visit new_user_session_path
+    fill_in "user_email", with: @user.email
+    fill_in "user_password", with: "password12345"
+    click_button "Sign in with email"
+
+    click_button "Account"
+    click_link "Edit Login Details"
+    click_link "Set up two-factor authentication"
+    assert_text "Save your backup codes"
+    click_link "Continue to verify"
+    assert_text "Scan this QR code"
+
+    fill_in "Verification code", with: totp_code_for(@user.reload)
+    click_button "Enable two-factor authentication"
+    assert_text "Two-factor authentication is now enabled."
+    assert @user.reload.otp_required_for_login?
+  end
+
+  test "logout then login succeeds with an entirely fresh sign-in form" do
+    @user.update!(
+      otp_required_for_login: false,
+      otp_secret: nil,
+      otp_backup_code_digests: [],
+      last_otp_timestep: nil
+    )
+
+    visit new_user_session_path
+    fill_in "user_email", with: @user.email
+    fill_in "user_password", with: "password12345"
+    click_button "Sign in with email"
+    click_button "Account"
+    click_button "Log Out"
+    assert_link "Sign in"
+
+    click_link "Sign in"
+    fill_in "user_email", with: @user.email
+    fill_in "user_password", with: "password12345"
+    click_button "Sign in with email"
+    assert_button "Account"
   end
 
   test "login succeeds with backup code" do
@@ -68,7 +117,7 @@ class TwoFactorLoginTest < ApplicationSystemTestCase
     visit new_user_session_path
     fill_in "user_email", with: @user.email
     fill_in "user_password", with: "password12345"
-    click_button I18n.t("devise.general.login")
+    click_button "Sign in with email"
     fill_in "otp_attempt", with: "feedface01"
     click_button "Verify"
     assert_current_path root_path, wait: 10
