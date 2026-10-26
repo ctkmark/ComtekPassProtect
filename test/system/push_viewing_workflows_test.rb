@@ -47,6 +47,7 @@ class PushViewingWorkflowsTest < ApplicationSystemTestCase
 
   test "retrieval step workflow" do
     @push.update(retrieval_step: true, expired: false)
+    initial_views = @push.view_count
 
     # When retrieval_step is enabled, the URL points to preliminary page
     # Visit the preliminary page directly (this is what the generated URL would be)
@@ -56,6 +57,8 @@ class PushViewingWorkflowsTest < ApplicationSystemTestCase
     assert_current_path preliminary_push_path(@push), wait: 5
     assert_text "Continue to secret", wait: 5
     assert_selector "a.btn.btn-primary.btn-lg", text: "Continue to secret", wait: 5
+    assert_no_text "MySecretPassword"
+    assert_equal initial_views, @push.reload.view_count, "The preliminary step must not consume a secret view"
 
     # Click the link to proceed
     click_link "Continue to secret"
@@ -63,6 +66,7 @@ class PushViewingWorkflowsTest < ApplicationSystemTestCase
     # Should now be on the actual push page
     assert_current_path push_path(@push), wait: 5
     assert_text "MySecretPassword", wait: 5
+    assert_equal initial_views + 1, @push.reload.view_count
   end
 
   test "expired push shows expiration message" do
